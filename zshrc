@@ -258,3 +258,10 @@ alias myip='curl -s ifconfig.me'
 
 # Process management
 alias psg='ps aux | grep -v grep | grep -i'
+
+# Phase 2 tools
+alias top='btop'
+alias diff='delta'
+alias ps='procs'
+alias du='dust'
+alias df='duf'

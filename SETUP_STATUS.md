@@ -17,6 +17,7 @@
 - Redis 6.0.16
 
 ## Tools Installed
+### Phase 1 (Complete)
 - [x] fzf
 - [x] tmux
 - [x] direnv
@@ -24,10 +25,18 @@
 - [x] lazygit
 - [x] lazydocker
 - [x] GitHub CLI
-- [ ] delta (Phase 2)
-- [ ] btop (Phase 2)
-- [ ] httpie (Phase 2)
-- [ ] zoxide (Phase 2)
+
+### Phase 2 (In Progress)
+- [x] delta - Better git diffs
+- [x] btop - System monitor
+- [x] httpie - API testing
+- [x] duf - Better df
+- [x] procs - Better ps
+- [x] dust - Better du
+- [ ] zoxide - Smarter cd (needs Rust)
+- [ ] Docker tools (ctop, dive)
+- [ ] mkcert - Local HTTPS
+- [ ] Additional tools
 
 ## Repository
 https://github.com/Camier/dotfiles
