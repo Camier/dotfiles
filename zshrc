@@ -184,8 +184,77 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-alias mydb='psql -U miko -d myapp_dev -h localhost'
-alias mydb-mysql='mysql -u miko -p@lfred33 myapp_dev'
+alias mydb="pgcli -U miko -d myapp_dev -h localhost"
+alias mydb-mysql="mycli -u miko -p@lfred33 myapp_dev"
 alias mydb-mongo='mongosh -u miko -p @lfred33 --authenticationDatabase myapp_dev myapp_dev'
 alias mydb-redis='redis-cli -a @lfreD33'
 alias mydb-redis='redis-cli -a @lfred33'
+export BROWSER="/mnt/c/Program\ Files/Firefox\ Developer\ Edition/firefox.exe"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# fzf configuration
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+
+# Git branch search with fzf
+fbr() {
+  local branches branch
+  branches=$(git branch --all | grep -v HEAD) &&
+  branch=$(echo "$branches" | fzf -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
+
+# Kill process with fzf
+fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+  if [ "x$pid" != "x" ]; then
+    echo $pid | xargs kill -${1:-9}
+  fi
+}
+
+# fzf git log browser
+fshow() {
+  git log --graph --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
+}
+eval "$(direnv hook zsh)"
+
+# Enhanced navigation
+alias zz='cd -'  # Go to previous directory
+
+# Docker compose aliases
+alias dcu='docker compose up'
+alias dcud='docker compose up -d'
+alias dcd='docker compose down'
+alias dcl='docker compose logs'
+alias dclf='docker compose logs -f'
+alias dcps='docker compose ps'
+alias dcr='docker compose restart'
+
+# Quick edits
+alias ezsh='code ~/.zshrc'
+alias szsh='source ~/.zshrc'
+
+# Tmux aliases
+alias t='tmux'
+alias ta='tmux attach'
+alias tls='tmux ls'
+alias tn='tmux new -s'
+
+# lazygit alias
+alias lg='lazygit'
+
+# Network utilities
+alias ports='netstat -tulanp'
+alias myip='curl -s ifconfig.me'
+
+# Process management
+alias psg='ps aux | grep -v grep | grep -i'
