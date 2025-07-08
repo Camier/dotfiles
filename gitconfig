@@ -1,0 +1,9 @@
+[core]
+	autocrlf = input
+	eol = lf
+	editor = code --wait
+[user]
+	name = Camier
+	email = mickael.souedan@hotmail.fr
+[init]
+	defaultBranch = main
