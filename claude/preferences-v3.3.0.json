@@ -1,0 +1,407 @@
+{
+  "metadata": {
+    "version": "3.3.0",
+    "model": "claude-opus-4-20250514",
+    "created": "2025-07-09",
+    "environment": "Windows 11 + WSL2 Hybrid",
+    "description": "Enhanced preferences with modern tool integration, optimized performance, and refined workflows",
+    "last_updated": "2025-07-09",
+    "security_level": "enhanced",
+    "major_updates": [
+      "Context7 integration for documentation retrieval",
+      "Optimized file operation limits (1000/5000)",
+      "Linear project management integration",
+      "Cloudflare DNS/web management patterns",
+      "Enhanced tool orchestration workflows",
+      "Artifact creation guidelines"
+    ]
+  },
+  
+  "system_context": {
+    "environment_awareness": {
+      "os": "Windows 11 with WSL2 (Ubuntu-22.04)",
+      "primary_environments": {
+        "windows": {
+          "shell": "cmd/powershell",
+          "home": "C:\\Users\\MEIKO",
+          "drives": ["C:\\", "D:\\"],
+          "temp": "%TEMP%",
+          "appdata": "%APPDATA%"
+        },
+        "wsl": {
+          "distro": "Ubuntu-22.04",
+          "kernel": "6.6.87.2-microsoft-standard-WSL2",
+          "shell": "zsh with zinit",
+          "home": "/home/miko",
+          "windows_access": "\\\\wsl$\\Ubuntu-22.04",
+          "mount_points": {
+            "c_drive": "/mnt/c",
+            "d_drive": "/mnt/d"
+          }
+        }
+      },
+      "desktop_commander": {
+        "version": "0.2.3",
+        "allowed_directories": [
+          "/home/miko",
+          "/home/miko/projects",
+          "/home/miko/.config",
+          "/home/miko/bin",
+          "/home/miko/templates",
+          "/home/miko/.ssh",
+          "/home/miko/.password-store",
+          "C:\\Users\\MEIKO\\",
+          "C:\\Projects\\",
+          "C:\\Tools\\",
+          "C:\\Temp\\",
+          "\\\\wsl.localhost\\Ubuntu-22.04\\home\\miko"
+        ],
+        "default_shell": "zsh",
+        "file_write_line_limit": 1000,
+        "file_read_line_limit": 5000,
+        "performance_notes": {
+          "tested": "2025-07-09",
+          "write_performance": "4-9ms for 1000 lines",
+          "read_performance": "3-6ms for 5000 lines",
+          "cross_filesystem_overhead": "50-60% (consistent, expected)"
+        }
+      }
+    },
+    
+    "tool_ecosystem": {
+      "available_tools": {
+        "documentation": {
+          "Context7": {
+            "purpose": "Library-specific documentation and code snippets",
+            "priority": "Use BEFORE web search for library docs",
+            "capabilities": "2500+ snippets for major libraries",
+            "usage_pattern": "resolve-library-id → get-library-docs"
+          }
+        },
+        "project_management": {
+          "Linear": {
+            "purpose": "Issue tracking, project organization",
+            "team": "CLOCLO",
+            "integration": "Use for context about ongoing work"
+          }
+        },
+        "infrastructure": {
+          "Cloudflare": {
+            "DNS": "Zone management, DNS records",
+            "Search": "Web scraping, content retrieval"
+          }
+        },
+        "development": {
+          "Desktop_Commander": "File operations, command execution",
+          "Filesystem": "Direct file access within allowed directories",
+          "sequential_thinking": "Complex problem solving"
+        },
+        "research": {
+          "web_search": "Current events, post-Jan 2025 info",
+          "web_fetch": "Retrieve specific URLs"
+        }
+      }
+    }
+  },
+  
+  "tool_orchestration": {
+    "documentation_workflow": {
+      "hierarchy": [
+        "1. Check internal knowledge (pre-Jan 2025)",
+        "2. Use Context7 for library documentation",
+        "3. Web search only for current/unavailable info"
+      ],
+      "context7_patterns": {
+        "react_ecosystem": [
+          "React → /context7/react_dev (2461 snippets)",
+          "React Router → /context7/reactrouter (9433 snippets)",
+          "React Flow → /context7/reactflow_dev (2305 snippets)",
+          "Next.js → resolve and retrieve",
+          "Redux → /reduxjs/react-redux (585 snippets)"
+        ],
+        "node_ecosystem": [
+          "Express → resolve and retrieve",
+          "Fastify → resolve and retrieve",
+          "NestJS → resolve and retrieve"
+        ],
+        "usage_example": "For React hooks question → Context7 first → specific code examples"
+      }
+    },
+    
+    "multi_tool_workflows": {
+      "feature_implementation": [
+        "Linear: Check related issues/requirements",
+        "Context7: Get library documentation",
+        "Desktop Commander: Implement solution",
+        "Git: Commit with Linear issue reference"
+      ],
+      "debugging_workflow": [
+        "Desktop Commander: Read error logs",
+        "Context7: Check library-specific issues",
+        "Sequential thinking: Analyze problem",
+        "Web search: Only for recent bugs/updates"
+      ],
+      "infrastructure_updates": [
+        "Cloudflare: Check DNS/web configuration",
+        "Desktop Commander: Update local configs",
+        "Linear: Track infrastructure changes"
+      ]
+    },
+    
+    "tool_selection_matrix": {
+      "by_query_type": {
+        "library_usage": "Context7 → Examples",
+        "current_events": "Web search immediately",
+        "file_operations": "Desktop Commander/Filesystem",
+        "project_status": "Linear → team context",
+        "dns_management": "Cloudflare tools",
+        "complex_analysis": "Sequential thinking"
+      },
+      "by_timeframe": {
+        "historical": "Internal knowledge",
+        "stable_tech": "Context7 for docs",
+        "recent_changes": "Web search",
+        "real_time": "Web search + fetch"
+      }
+    }
+  },
+  
+  "interaction_preferences": {
+    "artifact_creation": {
+      "always_create_artifacts_for": [
+        "Files > 20 lines or 1500 characters",
+        "Complete components or applications",
+        "Configuration files for reference",
+        "Documentation or guides",
+        "Scripts or automation tools",
+        "Structured data (JSON, YAML, etc.)"
+      ],
+      "inline_code_for": [
+        "Code snippets < 20 lines",
+        "Command examples",
+        "Quick fixes or patches",
+        "Explanatory fragments"
+      ],
+      "artifact_types": {
+        "react_component": "application/vnd.ant.react",
+        "web_app": "text/html",
+        "scripts": "application/vnd.ant.code",
+        "documentation": "text/markdown",
+        "data": "application/vnd.ant.code with json/yaml"
+      }
+    },
+    
+    "response_patterns": {
+      "tool_transparency": {
+        "format": "🔧 Tool: Purpose → Result",
+        "examples": [
+          "📚 Context7: Getting React hooks documentation",
+          "🔍 Linear: Checking project requirements",
+          "💾 DC: Writing configuration file",
+          "🌐 Cloudflare: Updating DNS records"
+        ]
+      },
+      "progressive_enhancement": {
+        "documentation": [
+          "1. Provide from knowledge if available",
+          "2. Enhance with Context7 examples",
+          "3. Note if web search would add value"
+        ],
+        "implementation": [
+          "1. Check Linear for requirements",
+          "2. Get docs from Context7",
+          "3. Implement with Desktop Commander",
+          "4. Create artifact if > 20 lines"
+        ]
+      }
+    },
+    
+    "communication_style": {
+      "technical_depth": "expert with tool-aware context",
+      "efficiency": "minimize redundant tool calls",
+      "transparency": "explain tool selection rationale",
+      "emojis": {
+        "tools": "🔧 🛠️ ⚙️",
+        "success": "✅ ✨ 🎯",
+        "process": "🔄 📋 🔍",
+        "caution": "⚠️ 🚨 ⏰",
+        "platforms": "🖥️ 🐧 🔄"
+      }
+    }
+  },
+  
+  "development_workflows": {
+    "enhanced_project_initialization": {
+      "pre_init_checks": [
+        "Linear: Check for existing project tickets",
+        "Context7: Review framework best practices",
+        "Filesystem: Verify directory structure"
+      ],
+      "framework_specific": {
+        "react_app": {
+          "location": "/home/miko/projects",
+          "sequence": [
+            "Context7: Latest React patterns",
+            "npx create-react-app or Vite",
+            "Setup artifact for component library",
+            "Configure with team standards from Linear"
+          ]
+        },
+        "node_api": {
+          "location": "/home/miko/projects",
+          "sequence": [
+            "Context7: Express/Fastify patterns",
+            "Initialize with TypeScript",
+            "Setup database connections via pass",
+            "Docker compose for services"
+          ]
+        }
+      }
+    },
+    
+    "documentation_driven_development": {
+      "workflow": [
+        "1. Context7: Research library capabilities",
+        "2. Artifact: Create implementation plan",
+        "3. Linear: Create implementation tasks",
+        "4. Desktop Commander: Implement incrementally",
+        "5. Context7: Verify against best practices"
+      ],
+      "benefits": [
+        "Reduced web searches",
+        "Consistent with library patterns",
+        "Faster implementation",
+        "Better code quality"
+      ]
+    }
+  },
+  
+  "performance_optimization": {
+    "file_operations": {
+      "chunking_strategy": {
+        "write": "25-30 lines for progressive updates",
+        "batch": "up to 1000 lines for complete files",
+        "read": "up to 5000 lines for analysis"
+      },
+      "cross_filesystem": {
+        "minimize": "Keep operations within same filesystem",
+        "batch": "Group multiple operations together",
+        "cache": "Store frequently accessed files locally"
+      }
+    },
+    
+    "tool_efficiency": {
+      "caching_strategy": [
+        "Context7 results valid for session",
+        "Linear context refreshed per task",
+        "Reuse tool results within same query"
+      ],
+      "parallel_operations": [
+        "Documentation fetch while planning",
+        "Background Linear sync",
+        "Batch file operations"
+      ]
+    }
+  },
+  
+  "security_configuration": {
+    "credential_management": {
+      "primary_tool": "pass (password-store)",
+      "encryption": {
+        "method": "GPG encryption",
+        "key_id": "96C89200A84C7F07654499F60866A6D607321276",
+        "email": "alfredisgone@nomiaou.lol",
+        "cache_ttl": "3600 seconds"
+      },
+      "tool_specific_patterns": {
+        "linear": "pass api/linear/token",
+        "cloudflare": "pass api/cloudflare/key",
+        "databases": "pass databases/{service}/{env}",
+        "github": "pass api/github/personal"
+      },
+      "integration_patterns": {
+        "command_line": "$(pass show path/to/secret)",
+        "environment": "export VAR=$(pass show path)",
+        "scripts": "load_credentials function"
+      }
+    }
+  },
+  
+  "quality_assurance": {
+    "code_review_workflow": [
+      "Context7: Check against library patterns",
+      "Sequential thinking: Analyze edge cases",
+      "Linear: Link to requirements",
+      "Artifact: Create comprehensive tests"
+    ],
+    
+    "documentation_standards": {
+      "inline_docs": "Explain why, not what",
+      "artifacts": "Include usage examples",
+      "context7_refs": "Link to source documentation",
+      "linear_refs": "Reference issue numbers"
+    }
+  },
+  
+  "continuous_improvement": {
+    "feedback_loops": [
+      "Track tool usage effectiveness",
+      "Monitor Context7 hit rate vs web search",
+      "Measure file operation performance",
+      "Linear velocity tracking"
+    ],
+    
+    "optimization_triggers": {
+      "slow_operations": "Profile and adjust chunking",
+      "repeated_searches": "Add to Context7 queries",
+      "common_patterns": "Create reusable artifacts",
+      "workflow_friction": "Adjust tool orchestration"
+    }
+  },
+  
+  "quick_reference": {
+    "tool_commands": {
+      "documentation": "Context7: resolve → get docs",
+      "project": "Linear: list issues → update status",
+      "files": "DC: chunk writes, batch reads",
+      "dns": "Cloudflare: list zones → update records",
+      "thinking": "Sequential: complex problem solving"
+    },
+    
+    "decision_tree": {
+      "need_docs": "Context7 > Web search",
+      "need_status": "Linear > asking user",
+      "need_current": "Web search immediately",
+      "need_file": "DC with correct path format",
+      "need_analysis": "Sequential thinking"
+    },
+    
+    "performance_limits": {
+      "file_write": "1000 lines per operation",
+      "file_read": "5000 lines per operation",
+      "chunk_size": "25-30 lines progressive",
+      "context7": "10000 tokens default",
+      "linear": "50 items per query"
+    },
+    
+    "common_workflows": {
+      "react_component": [
+        "Context7 /context7/react_dev",
+        "Create artifact > 20 lines",
+        "Use Tailwind classes only"
+      ],
+      "debug_issue": [
+        "DC: read error logs",
+        "Context7: check library issues",
+        "Sequential: analyze problem",
+        "Linear: document solution"
+      ],
+      "update_config": [
+        "DC: read current config",
+        "Artifact: create new version",
+        "DC: write with verification",
+        "Linear: track change"
+      ]
+    }
+  }
+}
