@@ -1,0 +1,10 @@
+# Show line numbers and column, smart case by default
+--line-number
+--column
+--smart-case
+
+# Skip VCS and binary by default; include hidden files except .git
+--hidden
+--glob
+!.git/
+

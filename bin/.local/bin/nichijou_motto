@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+quotes=(
+  ":3 THINGS WE THINK ARE COOL"
+  "UwU keep it cute, keep it fast"
+  "x3 gentle vibes, sharp tools"
+  "(=^‥^=) stay comfy, ship code"
+  "*sparkle* everyday life, but cooler"
+  "nya~ focus mode activated"
+  "small steps, big smiles :3"
+  "bwah! bug defeated (probably)"
+  "'mihoshi.exe' has encountered a joy overflow"
+  "coffee: initialized; chaos: contained; cuteness: maximum"
+  "today’s commit message: nya~ productive"
+  "remember to stretch and blink owo"
+  "shipping delight, not just code ✨"
+  "calm mind, sharp cli"
+  "friendship ended with bugs; cat is my new friend"
+  "one more keystroke, one more smile :3"
+  "gomen lag-san, we go zoom now"
+  "deployed with love and snacks"
+  "yak shaved. it’s adorable now"
+  "weird little terminal doing its best"
+)
+ascii=(
+  "(=^･ω･^=)"
+  "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧"
+  "(・∀・)"
+  "(≧◡≦)"
+  "(￣︶￣)"
+  "(✿◠‿◠)"
+  "(・ω<)"
+  "(°ロ°) !"
+  "(=ＴェＴ=)"
+  "(＾▽＾)"
+  "(╯✧▽✧)╯"
+  "(｡•̀ᴗ-)✧"
+  "(ᵔᴥᵔ)"
+  "(๑•̀ㅂ•́)و✧"
+  "(づ｡◕‿‿◕｡)づ"
+  "(｡･ω･｡)ﾉ♡"
+  "(•̀ᴗ•́)و ̑̑"
+  "(⌒‿⌒)"
+)
+
+qr=${#quotes[@]}
+ar=${#ascii[@]}
+
+hash_string() {
+  local s="$1" h=0 i c
+  for ((i=0;i<${#s};i++)); do
+    printf -v c '%d' "'${s:i:1}"
+    h=$(( (h*31 + c) & 0x7fffffff ))
+  done
+  echo "$h"
+}
+
+mode=${NICHIJOU_MOTTO_MODE:-sequential}
+
+case "$mode" in
+  directory)
+    h=$(hash_string "$PWD")
+    idx=$(( h % qr ))
+    aidx=$(( (h/qr + 13) % ar ))
+    ;;
+  branch)
+    if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+      b=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo main)
+      h=$(hash_string "$b")
+      idx=$(( h % qr ))
+      aidx=$(( (h/qr + 7) % ar ))
+    else
+      mode=sequential
+    fi
+    ;;
+  random)
+    idx=$(( RANDOM % qr ))
+    aidx=$(( RANDOM % ar ))
+    ;;
+esac
+
+state_dir="${XDG_CACHE_HOME:-$HOME/.cache}/nichijou_motto"
+state_file="$state_dir/state"
+current_file="$state_dir/current"
+mkdir -p "$state_dir" 2>/dev/null || true
+
+if [[ ${mode} == sequential ]]; then
+  # Two-step state: 'state' holds next values; 'current' holds active pair for this prompt
+  if [[ ${1:-quote} == face ]]; then
+    if [[ -f "$current_file" ]]; then
+      IFS=' ' read -r idx aidx ts < "$current_file" || true
+    fi
+    if [[ -z ${idx:-} ]]; then
+      if [[ -f "$state_file" ]]; then
+        IFS=' ' read -r qn an < "$state_file" || true
+        idx=${qn:-0}; aidx=${an:-0}
+      else
+        idx=0; aidx=0
+      fi
+    fi
+  else
+    if [[ -f "$state_file" ]]; then
+      IFS=' ' read -r qn an < "$state_file" || true
+      idx=${qn:-0}; aidx=${an:-0}
+    else
+      idx=0; aidx=0
+    fi
+    printf '%s %s %s' "$idx" "$aidx" "$(date +%s)" > "$current_file" 2>/dev/null || true
+    printf '%s %s' "$(( (idx + 1) % qr ))" "$(( (aidx + 1) % ar ))" > "$state_file" 2>/dev/null || true
+  fi
+fi
+
+idx=${idx:-0}
+aidx=${aidx:-0}
+
+# Allow user extensions from config files
+add_from_file() {
+  local file="$1"; shift || true
+  [[ -r "$file" ]] || return 0
+  local -a lines=()
+  while IFS= read -r line; do
+    [[ -n "$line" ]] || continue
+    lines+=("$line")
+  done <"$file"
+  if [[ "$2" == "quotes" ]]; then
+    quotes+=("${lines[@]}")
+  else
+    ascii+=("${lines[@]}")
+  fi
+}
+
+cfg_dir="${XDG_CONFIG_HOME:-$HOME/.config}/nichijou"
+add_from_file "$cfg_dir/quotes.txt" quotes
+add_from_file "$cfg_dir/faces.txt" faces || true
+
+qr=${#quotes[@]}
+ar=${#ascii[@]}
+(( qr>0 && ar>0 )) || { echo ":3"; exit 0; }
+
+case "${1:-both}" in
+  quote) echo "${quotes[$((idx%qr))]}" ;;
+  face)  echo "${ascii[$((aidx%ar))]}" ;;
+  *)     echo "${quotes[$((idx%qr))]} ${ascii[$((aidx%ar))]}" ;;
+esac

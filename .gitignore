@@ -1,0 +1,16 @@
+# OS/editor noise
+.DS_Store
+.idea/
+.vscode/
+
+# Zsh caches
+zsh/.zcompdump*
+
+# Local overrides (not tracked)
+zsh/.zshrc.local
+kitty/.config/kitty/local.conf
+starship/.config/starship/local.toml
+bin/.local/bin/private/
+
+# Stow backup dirs (if any)
+*/.stow-backup/

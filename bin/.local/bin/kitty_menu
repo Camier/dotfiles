@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cyan='\033[1;36m'; reset='\033[0m'
+printf "${cyan}Kitty Menu — Quick Actions${reset}\n\n"
+cat <<'MENU'
+Everyday Essentials
+  1) icat (image preview)                             [Ctrl+Shift+I]
+  2) diff (side-by-side)                              [Ctrl+Shift+D]
+  3) hints: paths                                     [Ctrl+Shift+P F]
+  4) hints: words                                     [Ctrl+Shift+P W]
+  5) hints: hashes                                    [Ctrl+Shift+P H]
+  6) hints: lines                                     [Ctrl+Shift+P L]
+  7) unicode input                                    [Ctrl+Shift+U]
+  8) clipboard (kitten)                               [Ctrl+Shift+Alt+C]
+  9) broadcast toggle                                 [Ctrl+Shift+B]
+
+Dev Power-Ups
+ 10) hyperlinked_grep                                 [Ctrl+Shift+Z]
+ 11) themes                                           [Ctrl+Shift+X]
+ 12) fonts                                            [Ctrl+Shift+Alt+F]
+
+Remote & Files
+ 13) remote_file                                      [Ctrl+Shift+Alt+R]
+ 14) transfer                                         [Ctrl+Shift+Alt+T]
+
+UI / Workflow
+  15) quickterminal                                    [Ctrl+`]
+  16) motto panel toggle                               [Ctrl+Shift+;]
+  17) help overlay                                     [Ctrl+Shift+F1]
+  18) show last command output                         [Ctrl+Shift+O]
+  19) paste from history                               [Ctrl+Shift+Alt+H]
+  20) show scrollback                                  [Ctrl+Shift+H]
+  21) next layout                                      [Ctrl+Shift+L]
+  22) select window                                    [Ctrl+Shift+G]
+  23) SSH connect                                      (choose from ~/.ssh/config)
+
+  q) quit
+
+Choose: 
+MENU
+
+stty_state=$(stty -g || true)
+trap '[[ -n "$stty_state" ]] && stty "$stty_state" 2>/dev/null || true' EXIT
+stty -echo -icanon time 0 min 0 2>/dev/null || true
+read -r -n2 sel || true
+
+case "$sel" in
+  1) kitty +kitten hints --type path --program 'kitty +kitten icat --hold' ;;
+  2) kitty +kitten diff ;;
+  3) kitty +kitten hints --type path ;;
+  4) kitty +kitten hints --type word ;;
+  5) kitty +kitten hints --type hash ;;
+  6) kitty +kitten hints --type line ;;
+  7) kitty +kitten unicode_input ;;
+  8) kitty +kitten clipboard ;;
+  9) kitty +kitten broadcast --toggle ;;
+ 10) kitty +kitten hyperlinked_grep rg ;;
+ 11) kitty +kitten themes ;;
+ 12) kitty +kitten fonts ;;
+ 13) kitty +kitten remote_file ;;
+ 14) kitty +kitten transfer ;;
+ 15) kitty +kitten quickterminal ;;
+ 16) kitty +kitten panel --position bottom --height 1 "$HOME/.local/bin/nichijou_motto" ;;
+ 17) kitty +kitten panel --position top --height 16 "$HOME/.local/bin/kitty_help" ;;
+ 18) kitten @ action show_last_command_output ;;
+ 19) kitten @ action paste_from_history ;;
+ 20) kitten @ action show_scrollback ;;
+ 21) kitten @ action next_layout ;;
+ 22) kitten @ action select_window ;;
+ 23) "$HOME/.local/bin/kitty_ssh_prompt" ;;
+  q|Q|\033) : ;;
+  *) : ;;
+esac
+exit 0

@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cols=${COLUMNS:-80}
+printf "\033[1;36mKitty Help — Custom Keybindings\033[0m\n\n"
+cat <<'HELP'
+General
+  Ctrl+Shift+F1   Show this help overlay
+  Ctrl+Shift+F2   Edit kitty config
+  Ctrl+Shift+F5   Reload kitty config
+  Ctrl+Shift+F6   Debug kitty config
+
+Kittens
+  Ctrl+Shift+U    Unicode input
+  Ctrl+Shift+I    icat (image preview)
+  Ctrl+Shift+D    diff (side-by-side)
+  Ctrl+Shift+Z    hyperlinked_grep (search + clickable results)
+  Ctrl+Shift+X    themes (preview/switch)
+  Ctrl+Shift+B    broadcast typing toggle
+  Ctrl+Shift+Alt+C clipboard (advanced clipboard kitten)
+  Ctrl+`           quickterminal (floating quick access terminal)
+  Ctrl+Shift+Alt+F fonts (preview/tune)
+  Ctrl+Shift+Alt+R remote_file (open/edit/download over SSH)
+  Ctrl+Shift+Alt+T transfer (send/receive over SSH session)
+  Ctrl+Shift+G    select window
+
+Hints
+  Ctrl+Shift+P F  hints: paths
+  Ctrl+Shift+P W  hints: words
+  Ctrl+Shift+P H  hints: hashes
+  Ctrl+Shift+P L  hints: lines
+
+Appearance
+  Ctrl+Shift+A M  opacity +0.05
+  Ctrl+Shift+A L  opacity -0.05
+  Ctrl+Shift+A 1  opacity 1
+  Ctrl+Shift+A D  opacity default
+
+Nichijou
+  Ctrl+Shift+;    1-line motto panel
+
+Scrollback & Clipboard
+  Ctrl+Shift+H    show scrollback
+  Ctrl+Shift+O    show last command output
+  Ctrl+Shift+Alt+H paste from history
+
+Help
+  Press any key to close
+HELP
+
+# Wait for a single key press before exiting panel
+stty_state=$(stty -g || true)
+trap '[[ -n "$stty_state" ]] && stty "$stty_state" 2>/dev/null || true' EXIT
+stty -echo -icanon time 0 min 0 2>/dev/null || true
+while :; do
+  IFS= read -r -n1 -t 1 _ && break || true
+done
+exit 0

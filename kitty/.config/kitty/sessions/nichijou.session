@@ -1,0 +1,13 @@
+# Kitty session: Nichijou vibes
+new_tab title ":3 Playground"
+cd ~
+launch zsh
+
+new_tab title "THINGS WE THINK ARE COOL"
+cd ~/projects
+launch zsh
+launch --location=vsplit zsh
+
+new_tab title "Cute Utils"
+cd ~
+launch zsh -lc "htop || btm || top"

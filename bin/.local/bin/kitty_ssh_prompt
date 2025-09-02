@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+pick_host() {
+  local cfg=$HOME/.ssh/config
+  local hosts=()
+  if [[ -r $cfg ]]; then
+    while read -r a b _; do
+      [[ $a == Host ]] || continue
+      for h in $b; do
+        [[ $h == \** || $h == \?* || $h == *\** ]] && continue
+        hosts+=("$h")
+      done
+    done < "$cfg"
+  fi
+  if command -v fzf >/dev/null 2>&1 && ((${#hosts[@]})); then
+    printf '%s\n' "${hosts[@]}" | fzf --prompt='SSH host> '
+  else
+    printf 'Host: ' >&2
+    read -r host
+    echo "$host"
+  fi
+}
+
+host=$(pick_host)
+[[ -n ${host:-} ]] || exit 0
+exec kitty +kitten ssh "$host"
+
