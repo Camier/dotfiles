@@ -82,7 +82,6 @@ yarn.lock
 # Machine-Specific Binaries
 # ----------------------------------------------------------------------------
 bin/.local/bin/*
-!bin/.local/bin/.gitkeep
 
 # ----------------------------------------------------------------------------
 # Local Overrides (User-Specific, Not Tracked)

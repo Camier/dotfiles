@@ -15,10 +15,10 @@ Track portable shell/tool configurations; exclude machine-specific paths and sec
 - `README.md`: Setup instructions and tool boundaries documentation
 
 ## Setup, Build, Test, and Dev Commands
-- **Install all configs**: `./install` (runs `stow` for each package)
+- **Install default configs**: `./install` (installs `shell`, `conda`, `mise`)
 - **Uninstall all configs**: `./install --uninstall` (runs `stow -D`)
-- **Install single package**: `stow shell` or `stow conda`
-- **Uninstall single package**: `stow -D shell`
+- **Install single package**: `./install shell` or `./install conda`
+- **Uninstall single package**: `./install --uninstall shell`
 - **Verify symlinks**: `ls -la ~ | grep -E "^l"` (should point to `/LAB/@infra/dotfiles/`)
 - **Update configs**: `git pull` in repo, symlinks auto-update
 
@@ -84,7 +84,7 @@ cd /LAB/@infra/dotfiles
 # Ubuntu/Debian: sudo apt install stow
 # macOS: brew install stow
 
-# Install all configs
+# Install default configs
 ./install
 
 # Verify

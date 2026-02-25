@@ -17,8 +17,21 @@ bash -n install
 
 # Run install against an isolated target (no changes to $HOME)
 tmp="$(mktemp -d)"
-STOW_TARGET="$tmp" ./install conda mise shell git bin
+STOW_TARGET="$tmp" ./install
 find "$tmp" -maxdepth 5 -type l | sort
+
+# Optional package smoke (currently placeholders)
+STOW_TARGET="$tmp" ./install git bin
+
+# Conflict behavior check: safe by default, explicit when adopting
+work="$(mktemp -d)"
+cp -a . "$work/repo"
+touch "$tmp/.condarc"
+if STOW_TARGET="$tmp" "$work/repo/install" conda; then
+  echo "expected conflict failure"
+  exit 1
+fi
+STOW_TARGET="$tmp" "$work/repo/install" --adopt conda
 ```
 
 ## Commit Style

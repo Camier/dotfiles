@@ -23,17 +23,36 @@ jobs:
       - name: Smoke test install to isolated target
         run: |
           target="$(mktemp -d)"
-          STOW_TARGET="$target" ./install conda mise shell git bin
+          STOW_TARGET="$target" ./install
           test -L "$target/.condarc"
           test -L "$target/.shell_conda_policy.sh"
           test -L "$target/.config"
           test -e "$target/.config/mise/config.toml"
 
+      - name: Smoke test optional packages
+        run: |
+          target="$(mktemp -d)"
+          STOW_TARGET="$target" ./install git bin
+
+      - name: Conflict safety and adopt behavior
+        run: |
+          work="$(mktemp -d)"
+          cp -a . "$work/repo"
+          cd "$work/repo"
+          target="$(mktemp -d)"
+          touch "$target/.condarc"
+          if STOW_TARGET="$target" ./install conda; then
+            echo "install should fail on conflicts without --adopt"
+            exit 1
+          fi
+          STOW_TARGET="$target" ./install --adopt conda
+          test -L "$target/.condarc"
+
       - name: Smoke test uninstall from isolated target
         run: |
           target="$(mktemp -d)"
-          STOW_TARGET="$target" ./install conda mise shell git bin
-          STOW_TARGET="$target" ./install --uninstall conda mise shell git bin
+          STOW_TARGET="$target" ./install
+          STOW_TARGET="$target" ./install --uninstall
           test ! -e "$target/.condarc"
           test ! -e "$target/.shell_conda_policy.sh"
           test ! -e "$target/.config"

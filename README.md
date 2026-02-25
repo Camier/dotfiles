@@ -10,7 +10,7 @@ GNU Stow-based dotfiles for conda/mamba + mise + shell configuration management.
 ## Quick Start
 
 ```bash
-# Install all configs
+# Install default configs (shell + conda + mise)
 cd /LAB/@infra/dotfiles
 ./install
 
@@ -30,19 +30,25 @@ ls -la ~/.config/mise/config.toml  # Should symlink to /LAB/@infra/dotfiles/mise
 | `shell/` | Shell configs (Zsh/Bash) | `.zshrc`, aliases, PATH, conda policy |
 | `conda/` | Conda/mamba configuration | `.condarc` (channels, solver, optimizations) |
 | `mise/` | Mise toolchain | `.config/mise/config.toml` (Python, Node, CLI tools) |
-| `git/` | Git configuration | `.gitconfig`, `.gitignore_global` |
-| `bin/` | Custom scripts | `.local/bin/` for machine-specific binaries |
+| `git/` | Git configuration (optional package; currently placeholder) | `.gitconfig`, `.gitignore_global` |
+| `bin/` | Custom scripts (optional package; currently placeholder) | `.local/bin/` for machine-specific binaries |
 
 ---
 
 ## Usage
 
 ```bash
-# Install all
+# Install defaults (shell + conda + mise)
 ./install
 
 # Install single package
 ./install conda
+
+# Install optional packages (when populated)
+./install git bin
+
+# Adopt existing files only when migrating an existing machine
+./install --adopt
 
 # Uninstall all
 ./install --uninstall
@@ -50,6 +56,11 @@ ls -la ~/.config/mise/config.toml  # Should symlink to /LAB/@infra/dotfiles/mise
 # List packages
 ./install --list
 ```
+
+Installer behavior:
+- Runs a dry-run preflight before install.
+- Stops on conflicts by default (safe mode).
+- Requires explicit `--adopt` to move conflicting files into this repo.
 
 ---
 

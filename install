@@ -3,8 +3,9 @@
 # install - GNU Stow wrapper for dotfiles installation
 # =============================================================================
 # Usage:
-#   ./install              # Install all configs
+#   ./install              # Install default configs
 #   ./install --uninstall  # Remove all symlinks (stow -D)
+#   ./install --adopt      # Adopt existing files into repo before linking
 #   ./install shell        # Install only shell package
 #   ./install conda        # Install only conda package
 # =============================================================================
@@ -22,13 +23,19 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Stow packages (directories containing dotfiles)
-PACKAGES=(
+AVAILABLE_PACKAGES=(
     "shell"
     "conda"
     "mise"
     "git"
     "bin"
 )
+DEFAULT_PACKAGES=(
+    "shell"
+    "conda"
+    "mise"
+)
+PACKAGES=("${DEFAULT_PACKAGES[@]}")
 
 # ----------------------------------------------------------------------------
 # Functions
@@ -65,25 +72,105 @@ check_stow() {
     print_success "GNU Stow found: $(command -v stow)"
 }
 
+is_known_package() {
+    local package="$1"
+    local known
+    for known in "${AVAILABLE_PACKAGES[@]}"; do
+        if [ "$known" = "$package" ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+validate_packages() {
+    local package
+    for package in "${PACKAGES[@]}"; do
+        if ! is_known_package "$package"; then
+            print_error "Unknown package: '$package'"
+            print_info "Use --list to see supported package names"
+            exit 1
+        fi
+        if [ ! -d "$package" ]; then
+            print_error "Package directory '$package' not found"
+            exit 1
+        fi
+    done
+}
+
+preflight_package() {
+    local package="$1"
+    local output
+    local -a args=(
+        --target "$TARGET_DIR"
+        -n
+        -v
+        "$package"
+    )
+
+    if [ "$ADOPT" = true ]; then
+        args=(
+            --target "$TARGET_DIR"
+            --adopt
+            -n
+            -v
+            "$package"
+        )
+    fi
+
+    if output="$(stow "${args[@]}" 2>&1)"; then
+        print_success "No conflicts: $package"
+        return 0
+    fi
+
+    print_error "Conflict detected in package: $package"
+    echo "$output" >&2
+    return 1
+}
+
+run_preflight() {
+    local package
+    local failed=0
+    print_header "Preflight (Dry Run)"
+    for package in "${PACKAGES[@]}"; do
+        print_info "Checking package: $package"
+        if ! preflight_package "$package"; then
+            failed=1
+        fi
+    done
+
+    if [ "$failed" -ne 0 ]; then
+        print_error "Preflight failed. Resolve conflicts or re-run with --adopt."
+        exit 1
+    fi
+}
+
 install_package() {
     local package="$1"
     local action="${2:-install}"
-    
-    if [ ! -d "$package" ]; then
-        print_error "Package directory '$package' not found"
-        return 1
-    fi
+    local -a args=(
+        --target "$TARGET_DIR"
+    )
     
     print_info "Processing package: $package"
     
     if [ "$action" = "uninstall" ]; then
-        stow --target "$TARGET_DIR" -D "$package" 2>/dev/null && print_success "Uninstalled $package" || print_info "Nothing to uninstall for $package"
+        if stow --target "$TARGET_DIR" -D "$package" 2>/dev/null; then
+            print_success "Uninstalled $package"
+        else
+            print_info "Nothing to uninstall for $package"
+        fi
     else
-        # Stow to HOME by default (set STOW_TARGET to override).
-        stow --target "$TARGET_DIR" --adopt "$package" && print_success "Installed $package" || {
+        if [ "$ADOPT" = true ]; then
+            args+=(--adopt)
+        fi
+        args+=("$package")
+        if stow "${args[@]}"; then
+            print_success "Installed $package"
+        else
             print_error "Failed to install $package"
             return 1
-        }
+        fi
     fi
 }
 
@@ -96,26 +183,35 @@ Usage:
 
 Options:
     -u, --uninstall    Remove symlinks (stow -D)
+    -a, --adopt        Adopt existing files into dotfiles repo during install
     -h, --help         Show this help message
     -l, --list         List available packages
 
 Examples:
-    $0                 # Install all packages
+    $0                 # Install default packages
+    $0 --adopt         # Install and adopt existing files
     $0 --uninstall     # Remove all symlinks
     $0 shell conda     # Install only shell and conda
     $0 -l              # List available packages
 
-Available Packages:
-    $(printf "    %s\n" "${PACKAGES[@]}")
+Default Packages:
+    $(printf "    %s\n" "${DEFAULT_PACKAGES[@]}")
+
+All Available Packages:
+    $(printf "    %s\n" "${AVAILABLE_PACKAGES[@]}")
 
 EOF
 }
 
 list_packages() {
     print_header "Available Packages"
-    for pkg in "${PACKAGES[@]}"; do
+    for pkg in "${AVAILABLE_PACKAGES[@]}"; do
         if [ -d "$pkg" ]; then
-            echo "  ✓ $pkg"
+            if printf '%s\n' "${DEFAULT_PACKAGES[@]}" | grep -qx "$pkg"; then
+                echo "  ✓ $pkg (default)"
+            else
+                echo "  ✓ $pkg (optional)"
+            fi
         else
             echo "  ✗ $pkg (not found)"
         fi
@@ -127,12 +223,17 @@ list_packages() {
 # ----------------------------------------------------------------------------
 
 UNINSTALL=false
+ADOPT=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
         -u|--uninstall)
             UNINSTALL=true
+            shift
+            ;;
+        -a|--adopt)
+            ADOPT=true
             shift
             ;;
         -h|--help)
@@ -154,10 +255,12 @@ done
 print_header "Dotfiles Installer"
 print_info "Working directory: $SCRIPT_DIR"
 print_info "Target directory: $TARGET_DIR"
+print_info "Adopt mode: $ADOPT"
 echo ""
 
 # Check dependencies
 check_stow
+validate_packages
 echo ""
 
 # Action
@@ -167,6 +270,7 @@ if [ "$UNINSTALL" = true ]; then
     print_header "Uninstalling Dotfiles"
 else
     print_header "Installing Dotfiles"
+    run_preflight
 fi
 
 echo ""
@@ -180,6 +284,9 @@ echo ""
 print_header "Done"
 
 if [ "$UNINSTALL" = false ]; then
+    if [ "$ADOPT" = true ]; then
+        print_info "Adopt mode moved conflicting files into package directories before linking."
+    fi
     print_info "Verify symlinks with: ls -la ~ | grep -E '^l'"
     print_info "Reload shell with: source ~/.zshrc  (or start new terminal)"
 fi
