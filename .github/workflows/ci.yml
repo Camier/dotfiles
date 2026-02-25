@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  install-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install GNU Stow
+        run: sudo apt-get update && sudo apt-get install -y stow
+
+      - name: Validate installer syntax and package listing
+        run: |
+          bash -n install
+          ./install --list
+
+      - name: Smoke test install to isolated target
+        run: |
+          target="$(mktemp -d)"
+          STOW_TARGET="$target" ./install conda mise shell git bin
+          test -L "$target/.condarc"
+          test -L "$target/.shell_conda_policy.sh"
+          test -L "$target/.config"
+          test -e "$target/.config/mise/config.toml"
+
+      - name: Smoke test uninstall from isolated target
+        run: |
+          target="$(mktemp -d)"
+          STOW_TARGET="$target" ./install conda mise shell git bin
+          STOW_TARGET="$target" ./install --uninstall conda mise shell git bin
+          test ! -e "$target/.condarc"
+          test ! -e "$target/.shell_conda_policy.sh"
+          test ! -e "$target/.config"

@@ -81,5 +81,6 @@ Use `~/.zshrc.local` or `~/.condarc.local` for machine-specific configs (not tra
 ## See Also
 
 - `AGENTS.md` — Repository guidelines for agents
+- `CONTRIBUTING.md` — Branching, validation, and push notes
 - `/LAB/@doc` — Infrastructure documentation
 - Original configs preserved in `~/.dotfiles-backup/` (created on first install)
