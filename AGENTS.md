@@ -8,14 +8,14 @@ Track portable shell/tool configurations; exclude machine-specific paths and sec
 ## Project Structure & Module Organization
 - `shell/`: Shell configurations (`.zshrc`, `.bashrc`, aliases, functions, PATH setup)
 - `conda/`: Conda/mamba configuration (`.condarc`, environment policies)
-- `mise/`: Mise toolchain configuration (`config.toml`, tool versions)
+- `mise/`: Mise toolchain configuration (`.config/mise/config.toml`, tool versions)
 - `git/`: Git configuration (`.gitconfig`, `.gitignore_global`)
 - `bin/`: Custom scripts and aliases (`.local/bin/` for machine-specific binaries)
 - `install`: GNU Stow wrapper script (idempotent install/uninstall)
 - `README.md`: Setup instructions and tool boundaries documentation
 
 ## Setup, Build, Test, and Dev Commands
-- **Install default configs**: `./install` (installs `shell`, `conda`, `mise`)
+- **Install default configs**: `./install` (installs `shell`, `conda`, `mise`, `git`, `bin`)
 - **Uninstall all configs**: `./install --uninstall` (runs `stow -D`)
 - **Install single package**: `./install shell` or `./install conda`
 - **Uninstall single package**: `./install --uninstall shell`
@@ -56,7 +56,7 @@ Track portable shell/tool configurations; exclude machine-specific paths and sec
 
 | Tool | Use Case | Config Location |
 |------|----------|-----------------|
-| **mise** | Standalone Python, CLI tools | `mise/config.toml` |
+| **mise** | Standalone Python, CLI tools | `mise/.config/mise/config.toml` |
 | **conda/mamba** | Data science, ML, compiled deps | `conda/.condarc` |
 | **shell** | Bash/Zsh configs, aliases | `shell/` |
 

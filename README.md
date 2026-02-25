@@ -10,7 +10,7 @@ GNU Stow-based dotfiles for conda/mamba + mise + shell configuration management.
 ## Quick Start
 
 ```bash
-# Install default configs (shell + conda + mise)
+# Install default configs (shell + conda + mise + git + bin)
 cd /LAB/@infra/dotfiles
 ./install
 
@@ -38,14 +38,11 @@ ls -la ~/.config/mise/config.toml  # Should symlink to /LAB/@infra/dotfiles/mise
 ## Usage
 
 ```bash
-# Install defaults (shell + conda + mise)
+# Install defaults (shell + conda + mise + git + bin)
 ./install
 
 # Install single package
 ./install conda
-
-# Install git/bin packages
-./install git bin
 
 # Adopt existing files only when migrating an existing machine
 ./install --adopt

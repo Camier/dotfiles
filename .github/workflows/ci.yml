@@ -28,16 +28,14 @@ jobs:
         run: |
           target="$(mktemp -d)"
           STOW_TARGET="$target" ./install
+          test -L "$target/.bashrc"
+          test -L "$target/.zshrc"
           test -L "$target/.condarc"
           test -L "$target/.shell_conda_policy.sh"
           test -L "$target/.config"
           test -e "$target/.config/mise/config.toml"
-
-      - name: Smoke test optional packages
-        run: |
-          target="$(mktemp -d)"
-          STOW_TARGET="$target" ./install git bin
           test -L "$target/.gitconfig"
+          test -L "$target/.gitignore_global"
           test -L "$target/.local"
           test -e "$target/.local/bin/dotfiles-doctor"
 
@@ -60,6 +58,10 @@ jobs:
           target="$(mktemp -d)"
           STOW_TARGET="$target" ./install
           STOW_TARGET="$target" ./install --uninstall
+          test ! -e "$target/.bashrc"
+          test ! -e "$target/.zshrc"
           test ! -e "$target/.condarc"
           test ! -e "$target/.shell_conda_policy.sh"
           test ! -e "$target/.config"
+          test ! -e "$target/.gitconfig"
+          test ! -e "$target/.local"

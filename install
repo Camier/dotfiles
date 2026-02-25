@@ -34,6 +34,8 @@ DEFAULT_PACKAGES=(
     "shell"
     "conda"
     "mise"
+    "git"
+    "bin"
 )
 PACKAGES=("${DEFAULT_PACKAGES[@]}")
 

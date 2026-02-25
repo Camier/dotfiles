@@ -20,9 +20,6 @@ shellcheck shell/.bashrc shell/.shell_conda_policy.sh bin/.local/bin/dotfiles-do
 tmp="$(mktemp -d)"
 STOW_TARGET="$tmp" ./install
 find "$tmp" -maxdepth 5 -type l | sort
-
-# Optional package smoke
-STOW_TARGET="$tmp" ./install git bin
 test -L "$tmp/.gitconfig"
 test -L "$tmp/.local"
 test -e "$tmp/.local/bin/dotfiles-doctor"
