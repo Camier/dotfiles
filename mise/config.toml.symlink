@@ -1,0 +1,55 @@
+# =============================================================================
+# mise global config — ~/.config/mise/config.toml
+# Machine-portable settings and tools tracked across machines.
+# Machine-local overrides: ~/.config/mise/mise.local.toml
+# =============================================================================
+
+[tools]
+# CLI utilities
+bat        = "latest"
+fd         = "latest"
+ripgrep    = "latest"
+starship   = "latest"
+
+# Runtimes (pinned for reproducibility)
+node       = "22.21.1"
+go         = "1.23.6"
+python     = ["3.11.8", "3.12"]   # 3.11 = default; 3.12 = LAB projects (.python-version)
+bun        = "latest"
+
+# Cargo tools
+cargo-binstall = "latest"
+
+# Python tooling
+ruff       = "latest"
+
+# Node language servers
+"npm:@vue/language-server"  = "latest"
+"npm:bash-language-server"  = "latest"
+
+[settings]
+# Parallelism
+jobs = 12
+
+# Env cache — avoids re-evaluating [env] blocks on every command
+env_cache     = true
+env_cache_ttl = "24h"
+
+# Cache housekeeping
+cache_prune_age = "90d"
+
+# Read legacy .nvmrc / .python-version / .tool-versions files
+legacy_version_file = true
+
+# Auto-install missing tools on first use
+auto_install              = true
+auto_install_disable_tools = []
+
+# Enable experimental features (required for aqua backend, task runner, etc.)
+experimental = true
+
+# Network
+fetch_remote_versions_timeout = "10s"
+
+# Go: don't override GOBIN (we manage ~/go/bin via shell_path)
+go_set_gobin = false

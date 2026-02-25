@@ -1,0 +1,94 @@
+# =============================================================================
+# Conda/Mamba Configuration - Official Best Practices 2026
+# =============================================================================
+# Generated: 2026-02-04
+# Reference: conda.io/projects/conda/en/latest/user-guide/configuration/
+
+# -----------------------------------------------------------------------------
+# Channels
+# -----------------------------------------------------------------------------
+# conda-forge is the primary channel for this installation (Miniforge3)
+channels:
+  - conda-forge
+
+# CRITICAL: Strict priority prevents ABI conflicts between channels
+# With strict: packages from higher-priority channels always win
+channel_priority: strict
+
+# Block defaults channel to prevent accidental mixing
+denylist_channels:
+  - defaults
+
+# Show which channel provides each package (useful for debugging)
+show_channel_urls: true
+
+# -----------------------------------------------------------------------------
+# Solver
+# -----------------------------------------------------------------------------
+# libmamba is default since conda 23.10, explicit for clarity
+solver: libmamba
+
+# Use 4-8 threads for parallel solving (adjust based on CPU cores)
+solver_threads: 4
+
+# -----------------------------------------------------------------------------
+# Shell Integration
+# -----------------------------------------------------------------------------
+# Don't auto-activate base environment on shell startup
+# This keeps shell startup fast and prevents base pollution
+auto_activate_base: false
+
+# Show environment name in shell prompt
+# NOTE: CONDA_CHANGEPS1=0 is set in ~/.shell_common to prevent PS1 modification
+# The custom prompt (bash/zsh) handles showing the conda environment name
+changeps1: false
+
+# Use '{name}' for clearer env identification in prompt
+env_prompt: '({name}) '
+
+# -----------------------------------------------------------------------------
+# Updates
+# -----------------------------------------------------------------------------
+# Require explicit conda update commands (prevents surprise updates)
+auto_update_conda: false
+
+# -----------------------------------------------------------------------------
+# Environment & Package Locations
+# -----------------------------------------------------------------------------
+# User environments (primary) and base installation (fallback)
+envs_dirs:
+  - ~/.conda/envs
+  - ~/miniforge3/envs
+
+# Package cache locations
+pkgs_dirs:
+  - ~/.conda/pkgs
+  - ~/miniforge3/pkgs
+
+# Register environments in ~/.conda/environments.txt
+register_envs: true
+
+# -----------------------------------------------------------------------------
+# Safety & Performance
+# -----------------------------------------------------------------------------
+# Warn on safety issues but don't block (balance safety vs speed)
+safety_checks: warn
+
+# Require confirmation for destructive operations
+always_yes: false
+
+# Use zstd-compressed repodata for faster downloads
+repodata_use_zst: true
+
+# Prefer conda packages over pip when both are available
+# Reduces dependency conflicts in mixed environments
+pip_interop_enabled: false
+
+# Subtle notification for conda updates (doesn't auto-update)
+notify_outdated_conda: warn
+
+# -----------------------------------------------------------------------------
+# Mamba 2.0 Optimizations
+# -----------------------------------------------------------------------------
+plugins:
+  use_sharded_repodata: true
