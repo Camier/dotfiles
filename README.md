@@ -3,7 +3,7 @@
 GNU Stow-based dotfiles for conda/mamba + mise + shell configuration management.
 
 **Location:** `/LAB/@infra/dotfiles`  
-**Pattern:** ThePrimeagen (XDG + Stow) with holman `.symlink` convention
+**Pattern:** Pure GNU Stow packages (XDG-friendly layout where needed)
 
 ---
 
@@ -16,6 +16,7 @@ cd /LAB/@infra/dotfiles
 
 # Verify installation
 ls -la ~/.condarc  # Should symlink to /LAB/@infra/dotfiles/conda/
+ls -la ~/.config/mise/config.toml  # Should symlink to /LAB/@infra/dotfiles/mise/.config/mise/config.toml
 ```
 
 **Requirements:** GNU Stow (`sudo apt install stow`)
@@ -28,7 +29,7 @@ ls -la ~/.condarc  # Should symlink to /LAB/@infra/dotfiles/conda/
 |---------|---------|-----------|
 | `shell/` | Shell configs (Zsh/Bash) | `.zshrc`, aliases, PATH, conda policy |
 | `conda/` | Conda/mamba configuration | `.condarc` (channels, solver, optimizations) |
-| `mise/` | Mise toolchain | `config.toml` (Python, Node, CLI tools) |
+| `mise/` | Mise toolchain | `.config/mise/config.toml` (Python, Node, CLI tools) |
 | `git/` | Git configuration | `.gitconfig`, `.gitignore_global` |
 | `bin/` | Custom scripts | `.local/bin/` for machine-specific binaries |
 

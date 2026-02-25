@@ -13,6 +13,7 @@ set -e  # Exit on error
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
+TARGET_DIR="${STOW_TARGET:-$HOME}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -76,10 +77,10 @@ install_package() {
     print_info "Processing package: $package"
     
     if [ "$action" = "uninstall" ]; then
-        stow -D "$package" 2>/dev/null && print_success "Uninstalled $package" || print_info "Nothing to uninstall for $package"
+        stow --target "$TARGET_DIR" -D "$package" 2>/dev/null && print_success "Uninstalled $package" || print_info "Nothing to uninstall for $package"
     else
-        # Stow with --adopt to handle existing files gracefully
-        stow --adopt "$package" && print_success "Installed $package" || {
+        # Stow to HOME by default (set STOW_TARGET to override).
+        stow --target "$TARGET_DIR" --adopt "$package" && print_success "Installed $package" || {
             print_error "Failed to install $package"
             return 1
         }
@@ -152,6 +153,7 @@ done
 
 print_header "Dotfiles Installer"
 print_info "Working directory: $SCRIPT_DIR"
+print_info "Target directory: $TARGET_DIR"
 echo ""
 
 # Check dependencies

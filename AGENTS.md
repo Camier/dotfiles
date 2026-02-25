@@ -24,8 +24,8 @@ Track portable shell/tool configurations; exclude machine-specific paths and sec
 
 ## Coding Style & Naming Conventions
 - **Shell scripts**: POSIX `sh` compatible (no bashisms in shared configs)
-- **Stow packages**: Use `.symlink` suffix for files that should be symlinked (holman pattern)
-  - Example: `.condarc.symlink` → `~/.condarc`
+- **Stow packages**: Use pure Stow naming (file paths match target paths under `$HOME`)
+  - Example: `conda/.condarc` → `~/.condarc`
 - **Directory names**: Match target dotfile name (e.g., `shell/` contains `.zshrc`, `.bashrc`)
 - **Comments**: Use `# ============================================================================` section dividers for readability
 
@@ -65,8 +65,8 @@ Track portable shell/tool configurations; exclude machine-specific paths and sec
 ## Reality vs Plan Snapshot
 - **Current**: Flat stow packages (`shell/`, `conda/`, `mise/`)
 - **Planned**: XDG-compliant subdirs (`shell/.config/shell/`) for stricter separation
-- **Current**: `.symlink` suffix pattern (holman)
-- **Planned**: Pure stow (rename files to match target)
+- **Current**: Pure stow layout (target path mirrored inside each package)
+- **Planned**: Expand XDG coverage where helpful (`.config/<tool>/...`)
 
 ## Agent Workflow Tips
 - **Check repo state**: `git status -sb` before editing
