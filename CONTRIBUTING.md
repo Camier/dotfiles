@@ -14,14 +14,18 @@ From repo root:
 ```bash
 bash -n install
 ./install --list
+shellcheck shell/.bashrc shell/.shell_conda_policy.sh bin/.local/bin/dotfiles-doctor
 
 # Run install against an isolated target (no changes to $HOME)
 tmp="$(mktemp -d)"
 STOW_TARGET="$tmp" ./install
 find "$tmp" -maxdepth 5 -type l | sort
 
-# Optional package smoke (currently placeholders)
+# Optional package smoke
 STOW_TARGET="$tmp" ./install git bin
+test -L "$tmp/.gitconfig"
+test -L "$tmp/.local"
+test -e "$tmp/.local/bin/dotfiles-doctor"
 
 # Conflict behavior check: safe by default, explicit when adopting
 work="$(mktemp -d)"

@@ -79,13 +79,16 @@ yarn.lock
 *.backup
 
 # ----------------------------------------------------------------------------
-# Machine-Specific Binaries
-# ----------------------------------------------------------------------------
-bin/.local/bin/*
-
-# ----------------------------------------------------------------------------
 # Local Overrides (User-Specific, Not Tracked)
 # ----------------------------------------------------------------------------
-*.local
+.zshrc.local
+.bashrc.local
+.condarc.local
+.gitconfig.local
 .localrc
 .extra
+
+# Keep tracked bin scripts even when global gitignore excludes .local/
+!bin/.local/
+!bin/.local/bin/
+!bin/.local/bin/dotfiles-doctor

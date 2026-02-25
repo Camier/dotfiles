@@ -1,0 +1,28 @@
+[core]
+    editor = vim
+    autocrlf = input
+    excludesfile = ~/.gitignore_global
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = false
+
+[fetch]
+    prune = true
+
+[push]
+    autoSetupRemote = true
+
+[rerere]
+    enabled = true
+
+[alias]
+    st = status -sb
+    br = branch -vv
+    co = checkout
+    lg = log --oneline --graph --decorate --all
+
+[include]
+    path = ~/.gitconfig.local

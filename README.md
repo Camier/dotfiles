@@ -27,11 +27,11 @@ ls -la ~/.config/mise/config.toml  # Should symlink to /LAB/@infra/dotfiles/mise
 
 | Package | Purpose | Key Files |
 |---------|---------|-----------|
-| `shell/` | Shell configs (Zsh/Bash) | `.zshrc`, aliases, PATH, conda policy |
+| `shell/` | Shell configs (Zsh/Bash) | `.zshrc`, `.bashrc`, `.shell_conda_policy.sh` |
 | `conda/` | Conda/mamba configuration | `.condarc` (channels, solver, optimizations) |
 | `mise/` | Mise toolchain | `.config/mise/config.toml` (Python, Node, CLI tools) |
-| `git/` | Git configuration (optional package; currently placeholder) | `.gitconfig`, `.gitignore_global` |
-| `bin/` | Custom scripts (optional package; currently placeholder) | `.local/bin/` for machine-specific binaries |
+| `git/` | Git defaults | `.gitconfig`, `.gitignore_global` |
+| `bin/` | Utility scripts | `.local/bin/dotfiles-doctor` |
 
 ---
 
@@ -44,7 +44,7 @@ ls -la ~/.config/mise/config.toml  # Should symlink to /LAB/@infra/dotfiles/mise
 # Install single package
 ./install conda
 
-# Install optional packages (when populated)
+# Install git/bin packages
 ./install git bin
 
 # Adopt existing files only when migrating an existing machine
@@ -55,12 +55,20 @@ ls -la ~/.config/mise/config.toml  # Should symlink to /LAB/@infra/dotfiles/mise
 
 # List packages
 ./install --list
+
+# Run health checks (after installing bin package)
+dotfiles-doctor
 ```
 
 Installer behavior:
 - Runs a dry-run preflight before install.
 - Stops on conflicts by default (safe mode).
 - Requires explicit `--adopt` to move conflicting files into this repo.
+
+Health check:
+```bash
+dotfiles-doctor
+```
 
 ---
 
@@ -78,6 +86,9 @@ Installer behavior:
 ## Machine-Specific Overrides
 
 Use `~/.zshrc.local` or `~/.condarc.local` for machine-specific configs (not tracked in git). These are auto-sourced if present.
+
+For git identity or machine-specific git behavior, use:
+- `~/.gitconfig.local` (included from tracked `~/.gitconfig`)
 
 ---
 

@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+
+ok_count=0
+warn_count=0
+
+ok() {
+  printf '[OK]   %s\n' "$1"
+  ok_count=$((ok_count + 1))
+}
+
+warn() {
+  printf '[WARN] %s\n' "$1"
+  warn_count=$((warn_count + 1))
+}
+
+check_command() {
+  local cmd="$1"
+  if command -v "$cmd" >/dev/null 2>&1; then
+    ok "command available: $cmd"
+  else
+    warn "command missing: $cmd"
+  fi
+}
+
+check_link_target() {
+  local path="$1"
+  local expected="$2"
+
+  if [ ! -e "$path" ]; then
+    warn "missing file: $path"
+    return
+  fi
+
+  local resolved
+  resolved="$(readlink -f "$path")"
+  if [ "$resolved" = "$expected" ]; then
+    ok "linked correctly: $path"
+  else
+    warn "unexpected target for $path (got $resolved, expected $expected)"
+  fi
+}
+
+echo "Dotfiles doctor"
+echo "Repo: $REPO_ROOT"
+echo
+
+check_command stow
+check_command conda
+check_command mise
+echo
+
+check_link_target "$HOME/.condarc" "$REPO_ROOT/conda/.condarc"
+check_link_target "$HOME/.shell_conda_policy.sh" "$REPO_ROOT/shell/.shell_conda_policy.sh"
+check_link_target "$HOME/.config/mise/config.toml" "$REPO_ROOT/mise/.config/mise/config.toml"
+check_link_target "$HOME/.gitconfig" "$REPO_ROOT/git/.gitconfig"
+echo
+
+printf 'Summary: %d OK, %d WARN\n' "$ok_count" "$warn_count"
+
+if [ "$warn_count" -gt 0 ]; then
+  exit 1
+fi
